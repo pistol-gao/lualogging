@@ -39,8 +39,11 @@ function logging.file(filename, datePattern, logPattern)
 		if not f then
 			return nil, msg
 		end
-		local s = logging.prepareLogMsg(logPattern, os.date(), level, message)
-		f:write(s)
+		--[[local s = logging.prepareLogMsg(logPattern, os.date(), level, message)
+		f:write(s)]]
+		--prepareLogMsg uses gsub,which cost cpu heavily.while ".." will create much more string,costing much more resources.
+		--the best way is split write to file.
+		f:write( os.date(), " ",level," ", message, "\n")
 		return true
 	end)
 end
